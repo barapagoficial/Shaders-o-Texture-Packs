@@ -52,6 +52,11 @@ option.FXAA.comment=Suaviza los bordes dentados (antialiasing).
 option.UNDERWATER_TINT=Tinte bajo el agua
 option.UNDERWATER_TINT.comment=Tinte azul verdoso mientras la cámara está bajo el agua.
 
+option.shadowMapResolution=Resolución de sombras
+option.shadowMapResolution.comment=Tamaño del mapa de sombras. Más resolución = bordes más limpios y más consumo.
+option.shadowDistance=Distancia de sombras
+option.shadowDistance.comment=Distancia máxima a la que se dibujan sombras (en bloques).
+
 value.TONEMAP.0=Ninguno
 value.TONEMAP.1=Suave
 value.TONEMAP.2=Fílmico

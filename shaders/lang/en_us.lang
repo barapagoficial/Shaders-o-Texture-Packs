@@ -52,6 +52,11 @@ option.FXAA.comment=Smooths jagged edges (anti-aliasing).
 option.UNDERWATER_TINT=Underwater Tint
 option.UNDERWATER_TINT.comment=Blue-green tint while the camera is underwater.
 
+option.shadowMapResolution=Shadow Resolution
+option.shadowMapResolution.comment=Size of the shadow map. Higher = cleaner edges and more GPU cost.
+option.shadowDistance=Shadow Distance
+option.shadowDistance.comment=Maximum distance (in blocks) at which shadows are drawn.
+
 value.TONEMAP.0=None
 value.TONEMAP.1=Soft
 value.TONEMAP.2=Filmic
