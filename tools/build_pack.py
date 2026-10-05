@@ -14,7 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHADERS = os.path.join(ROOT, "shaders")
 RELEASES = os.path.join(ROOT, "releases")
 
-VERSION = sys.argv[1] if len(sys.argv) > 1 else "1.0.0"
+VERSION = sys.argv[1] if len(sys.argv) > 1 else "1.0.1"
 
 # Fecha fija dentro del zip: asi dos compilaciones del mismo codigo dan un
 # archivo identico (zip reproducible) y el .zip no cambia en cada build.
