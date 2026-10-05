@@ -1,0 +1,73 @@
+# Andes Shaders - English (en_us)
+option.CUSTOM_SKY=Custom Sky
+option.CUSTOM_SKY.comment=Draws a custom gradient sky with sun glow, sunset and stars.
+option.SUN_GLOW=Sun Glow
+option.SUN_GLOW.comment=Strength of the glow around the sun and the moon.
+option.STARS=Stars
+option.STARS.comment=Brightness of the night stars.
+option.HORIZON_FOG=Horizon Haze
+option.HORIZON_FOG.comment=Density of the fog near the horizon.
+option.CLOUD_SHADING=Cloud Shading
+option.CLOUD_SHADING.comment=Shades clouds depending on the time of day.
+option.SHADOWS=Dynamic Shadows
+option.SHADOWS.comment=Enables soft dynamic shadows from the sun and the moon.
+option.SHADOW_SOFTNESS=Shadow Softness
+option.SHADOW_SOFTNESS.comment=Filtering radius of the shadow edges.
+option.SHADOW_COLOR=Shadow Skylight
+option.SHADOW_COLOR.comment=Amount of cool sky light bouncing into shaded areas.
+option.NIGHT_BRIGHTNESS=Night Brightness
+option.NIGHT_BRIGHTNESS.comment=Moonlight brightness during the night.
+option.BLOCKLIGHT_TINT=Warm Block Light
+option.BLOCKLIGHT_TINT.comment=Gives torches and light blocks a warmer tint.
+option.WATER_WAVES=Water Waves
+option.WATER_WAVES.comment=Animated waves on the water surface.
+option.WATER_WAVE_HEIGHT=Wave Height
+option.WATER_WAVE_HEIGHT.comment=Height of the water waves.
+option.WATER_REFLECTIVITY=Water Reflection
+option.WATER_REFLECTIVITY.comment=Sky reflection and sun glint on water.
+option.WAVING_PLANTS=Waving Plants
+option.WAVING_PLANTS.comment=Grass, flowers, crops and vines sway with the wind.
+option.WAVING_LEAVES=Waving Leaves
+option.WAVING_LEAVES.comment=Leaves sway gently with the wind.
+option.WAVE_STRENGTH=Wind Strength
+option.WAVE_STRENGTH.comment=How far plants move with the wind.
+option.WIND_SPEED=Wind Speed
+option.WIND_SPEED.comment=How fast the wind blows.
+option.BLOOM=Bloom
+option.BLOOM.comment=Soft glow around bright lights and surfaces.
+option.BLOOM_STRENGTH=Bloom Strength
+option.BLOOM_STRENGTH.comment=Intensity of the glow.
+option.TONEMAP=Tone Mapping
+option.TONEMAP.comment=0 = off, 1 = soft, 2 = filmic.
+option.EXPOSURE=Exposure
+option.EXPOSURE.comment=Overall brightness of the image.
+option.SATURATION=Saturation
+option.SATURATION.comment=Color saturation.
+option.CONTRAST=Contrast
+option.CONTRAST.comment=Image contrast.
+option.VIGNETTE=Vignette
+option.VIGNETTE.comment=Darkening of the screen corners.
+option.FXAA=FXAA
+option.FXAA.comment=Smooths jagged edges (anti-aliasing).
+option.UNDERWATER_TINT=Underwater Tint
+option.UNDERWATER_TINT.comment=Blue-green tint while the camera is underwater.
+
+option.shadowMapResolution=Shadow Resolution
+option.shadowMapResolution.comment=Size of the shadow map. Higher = cleaner edges and more GPU cost.
+option.shadowDistance=Shadow Distance
+option.shadowDistance.comment=Maximum distance (in blocks) at which shadows are drawn.
+
+value.TONEMAP.0=None
+value.TONEMAP.1=Soft
+value.TONEMAP.2=Filmic
+value.SHADOW_SOFTNESS.0.5=0.5 (sharp)
+value.SHADOW_SOFTNESS.3.0=3.0 (very soft)
+
+profile.comment=Potato, Fast, Balanced, High and Ultra: pick one and tweak anything you like.
+
+screen.CIELO=Sky
+screen.LUCES=Lighting
+screen.SOMBRAS=Shadows
+screen.AGUA=Water
+screen.VIENTO=Wind
+screen.POST=Post Processing

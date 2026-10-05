@@ -1,0 +1,73 @@
+# Andes Shaders - Español (es_es)
+option.CUSTOM_SKY=Cielo personalizado
+option.CUSTOM_SKY.comment=Dibuja un cielo propio con degradado, resplandor solar, puesta de sol y estrellas.
+option.SUN_GLOW=Resplandor solar
+option.SUN_GLOW.comment=Intensidad del resplandor alrededor del sol y de la luna.
+option.STARS=Estrellas
+option.STARS.comment=Brillo de las estrellas durante la noche.
+option.HORIZON_FOG=Niebla del horizonte
+option.HORIZON_FOG.comment=Densidad de la neblina cerca del horizonte.
+option.CLOUD_SHADING=Sombreado de nubes
+option.CLOUD_SHADING.comment=Sombrea las nubes según la hora del día.
+option.SHADOWS=Sombras dinámicas
+option.SHADOWS.comment=Activa sombras suaves del sol y de la luna.
+option.SHADOW_SOFTNESS=Suavizado de sombras
+option.SHADOW_SOFTNESS.comment=Radio de filtrado del borde de las sombras.
+option.SHADOW_COLOR=Luz fría en sombras
+option.SHADOW_COLOR.comment=Cantidad de luz azulada del cielo dentro de las zonas en sombra.
+option.NIGHT_BRIGHTNESS=Brillo nocturno
+option.NIGHT_BRIGHTNESS.comment=Brillo de la luz de la luna durante la noche.
+option.BLOCKLIGHT_TINT=Luz cálida de bloques
+option.BLOCKLIGHT_TINT.comment=Da un tono más cálido a antorchas y bloques luminosos.
+option.WATER_WAVES=Olas en el agua
+option.WATER_WAVES.comment=Olas animadas en la superficie del agua.
+option.WATER_WAVE_HEIGHT=Altura de las olas
+option.WATER_WAVE_HEIGHT.comment=Altura de las olas del agua.
+option.WATER_REFLECTIVITY=Reflejo del agua
+option.WATER_REFLECTIVITY.comment=Reflejo del cielo y brillo del sol sobre el agua.
+option.WAVING_PLANTS=Plantas con viento
+option.WAVING_PLANTS.comment=La hierba, las flores, los cultivos y las enredaderas se mecen con el viento.
+option.WAVING_LEAVES=Hojas con viento
+option.WAVING_LEAVES.comment=Las hojas se mecen suavemente con el viento.
+option.WAVE_STRENGTH=Fuerza del viento
+option.WAVE_STRENGTH.comment=Cuánto se mueven las plantas con el viento.
+option.WIND_SPEED=Velocidad del viento
+option.WIND_SPEED.comment=Qué tan rápido sopla el viento.
+option.BLOOM=Resplandor
+option.BLOOM.comment=Halo suave alrededor de luces y superficies brillantes.
+option.BLOOM_STRENGTH=Intensidad del resplandor
+option.BLOOM_STRENGTH.comment=Intensidad del halo.
+option.TONEMAP=Mapeo de tonos
+option.TONEMAP.comment=0 = desactivado, 1 = suave, 2 = fílmico.
+option.EXPOSURE=Exposición
+option.EXPOSURE.comment=Brillo general de la imagen.
+option.SATURATION=Saturación
+option.SATURATION.comment=Saturación del color.
+option.CONTRAST=Contraste
+option.CONTRAST.comment=Contraste de la imagen.
+option.VIGNETTE=Viñeta
+option.VIGNETTE.comment=Oscurecimiento de las esquinas de la pantalla.
+option.FXAA=FXAA
+option.FXAA.comment=Suaviza los bordes dentados (antialiasing).
+option.UNDERWATER_TINT=Tinte bajo el agua
+option.UNDERWATER_TINT.comment=Tinte azul verdoso mientras la cámara está bajo el agua.
+
+option.shadowMapResolution=Resolución de sombras
+option.shadowMapResolution.comment=Tamaño del mapa de sombras. Más resolución = bordes más limpios y más consumo.
+option.shadowDistance=Distancia de sombras
+option.shadowDistance.comment=Distancia máxima a la que se dibujan sombras (en bloques).
+
+value.TONEMAP.0=Ninguno
+value.TONEMAP.1=Suave
+value.TONEMAP.2=Fílmico
+value.SHADOW_SOFTNESS.0.5=0.5 (nítidas)
+value.SHADOW_SOFTNESS.3.0=3.0 (muy suaves)
+
+profile.comment=Patata, Rápido, Equilibrado, Alto y Ultra: elige uno y ajusta lo que quieras.
+
+screen.CIELO=Cielo
+screen.LUCES=Iluminación
+screen.SOMBRAS=Sombras
+screen.AGUA=Agua
+screen.VIENTO=Viento
+screen.POST=Post-procesado
