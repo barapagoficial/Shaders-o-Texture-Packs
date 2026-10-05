@@ -316,8 +316,43 @@ def build_source(program_path, edited, cache):
 
 
 # ------------------------------------------------------------------ checks --
+# Declaraciones globales que no se pueden repetir dentro de un mismo programa.
+# (uniform NAME, attribute NAME y varying TIPO NAME -> el nombre es el grupo
+# indicado en cada expresion regular.)
+RE_DECLARATIONS = (
+    ("uniform", RE_UNIFORM, 1),
+    ("attribute", RE_ATTRIB, 1),
+    ("varying", RE_VARYING, 2),
+)
+
+
+def check_redeclarations(src):
+    """Avisa de un uniform/attribute/varying declarado dos veces en el mismo
+    programa (por ejemplo, en un .vsh y en una libreria que incluye).
+
+    Los compiladores de NVIDIA abortan con `error C1038: declaration of "X"
+    conflicts with previous declaration`; otros lo toleran, asi que hay que
+    detectarlo aqui, antes de abrir Minecraft."""
+    problems = []
+    seen = {}
+    for kind, regex, group in RE_DECLARATIONS:
+        for match in regex.finditer(src):
+            declared = match.group(group)
+            line = src.count("\n", 0, match.start()) + 1
+            if declared in seen:
+                first_kind, first_line = seen[declared]
+                problems.append(
+                    f"'{declared}' se declara dos veces en el programa "
+                    f"({first_kind} en la linea {first_line} y {kind} en la linea {line}); "
+                    f"en NVIDIA eso es el error C1038")
+            else:
+                seen[declared] = (kind, line)
+    return problems
+
+
 def warn_checks(name, src):
     problems = []
+    problems += check_redeclarations(src)
     for macro in RE_ATTRIB.findall(src):
         allowed = ATTRIBUTES_OK.get(macro)
         if allowed is not None and name not in allowed:

@@ -145,6 +145,8 @@ PATATA. Además revisa:
 - que los `uniform` usados existan en la API de Iris/OptiFine;
 - que los atributos (`mc_Entity`, `at_midBlock`) se usen solo donde están permitidos;
 - que cada `.fsh` que escribe color declare `/* RENDERTARGETS: N */`;
+- que ningún `uniform`, `attribute` o `varying` se declare dos veces en el mismo
+  programa (el `error C1038` de NVIDIA);
 - que los `varying` del `.fsh` estén declarados en su `.vsh`;
 - que las opciones del menú, los sliders y los perfiles existan de verdad en el GLSL;
 - que ningún `#define` se quede en `shaders.properties` (esas líneas no llegan al GLSL);
@@ -155,7 +157,7 @@ PATATA. Además revisa:
 python3 tools/validate_shaders.py
 
 # Crear el .zip listo para shaderpacks/
-python3 tools/build_pack.py 1.0.1
+python3 tools/build_pack.py 1.0.2
 ```
 
 Resultado actual:
@@ -203,11 +205,23 @@ Las 28 opciones «de usuario» son las 10 booleanas + 16 con valores + los dos
 | El agua o la hierba no se mueven | Comprueba que `WATER_WAVES` / `WAVING_PLANTS` estén activados. |
 | Un bloque nuevo no se mece | Añádelo a `block.properties` (ID 100 o 101). |
 | En el log sale `error C1503: undefined variable "EXPOSURE"` (o `CONTRAST`, `SATURATION`, `VIGNETTE`) y el pack no se aplica | Tenías la versión 1.0.0: las opciones estaban declaradas en `shaders.properties` y no llegaban al GLSL. Usa el pack **v1.0.1**, donde las opciones viven en `shaders/lib/settings.glsl`. |
+| En el log sale `error C1038: declaration of "shadowModelView" conflicts with previous declaration` y el pack no se aplica | Tenías la versión 1.0.1: `shadow.vsh` volvía a declarar `shadowModelView`, que ya venía de `lib/shadows.glsl`. Usa el pack **v1.0.2**. |
 | Ninguna opción del menú hace nada / el pack se ve "sin efectos" | Comprueba que las opciones estén declaradas en el GLSL (`lib/settings.glsl`), no en `shaders.properties`; `tools/validate_shaders.py` avisa de ese error. |
 
 ---
 
 ## 📝 Cambios
+
+### v1.0.2
+
+- **Arreglado el error `C1038: declaration of "shadowModelView" conflicts with
+  previous declaration at 0(118)`** que impedía cargar el pack
+  (`shadow_terrain_cutout`). `shadow.vsh` volvía a declarar `shadowModelView`,
+  que ya la declara `lib/shadows.glsl` (incluido por el propio `shadow.vsh`).
+  Ahora la matriz se declara en un solo sitio, como `shadowProjection`.
+- `tools/validate_shaders.py` avisa si un `uniform`, `attribute` o `varying` se
+  declara dos veces dentro del mismo programa, para que este fallo no vuelva a
+  colarse.
 
 ### v1.0.1
 
