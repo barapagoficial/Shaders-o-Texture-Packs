@@ -4,7 +4,7 @@
 
 /* ==========================================================================
    Andes Shaders - Particulas
-   Usan la luz del lightmap de Minecraft y la niebla.
+   Usan la iluminacion ambiental, tinte calido de antorchas y niebla.
    ========================================================================== */
 
 #include "/lib/lighting.glsl"
@@ -22,10 +22,16 @@ void main() {
     vec3 albedo = tex.rgb * vColor.rgb;
 
     vec3 lights = texture2D(lightmap, lmcoord).rgb;
-    vec3 color = albedo * lights;
+    float dayF = getDayFactor();
+    lights *= 1.0 + (1.0 - dayF) * (NIGHT_BRIGHTNESS - 1.0);
 
-    // Un poco mas de brillo para las particulas luminosas
-    color += albedo * albedo * 0.25;
+#ifdef BLOCKLIGHT_TINT
+    lights *= mix(vec3(1.0), vec3(1.15, 0.85, 0.65), sat(lmcoord.x * 1.5));
+#endif
+
+    vec3 color = albedo * lights;
+    // Realce para particulas luminosas (fuego, antorchas)
+    color += albedo * albedo * 0.35;
 
     float dist = length(vViewPos);
     color = applyFog(color, dist);

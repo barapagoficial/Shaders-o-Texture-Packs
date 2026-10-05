@@ -3,8 +3,7 @@
 /* ==========================================================================
    Andes Shaders - Pase de sombras
    La misma geometria de Minecraft se dibuja desde el sol o la luna.
-   La vegetacion se mece igual que en el pase normal para que su sombra
-   acompanie el movimiento.
+   La vegetacion se mece sincronizada al 100% con el pase principal.
    ========================================================================== */
 
 #include "/lib/waves.glsl"
@@ -13,6 +12,7 @@
 attribute vec4 mc_Entity;
 attribute vec4 at_midBlock;
 
+uniform mat4 shadowModelView;
 uniform mat4 shadowModelViewInverse;
 uniform vec3 cameraPosition;
 
@@ -25,20 +25,21 @@ void main() {
 
 #if defined(SHADOWS) && (defined(WAVING_PLANTS) || defined(WAVING_LEAVES))
     vec3 worldPos = playerPos.xyz + cameraPosition;
-    vec3 midOffset = at_midBlock.xyz * 0.015625; // at_midBlock viene en 1/64 de bloque
-    float heightFrac = sat(-midOffset.y * 2.0 + 0.5);
-    float seed = hash12(floor(worldPos.xz) + 0.5) * 6.2831;
+    vec3 midOffset = at_midBlock.xyz * 0.015625;
+    vec3 blockCenter = worldPos + midOffset;
+    vec3 blockCoord = floor(blockCenter + 0.001) + 0.5;
     vec3 offset = vec3(0.0);
 
     #ifdef WAVING_PLANTS
     if (abs(mc_Entity.x - BLOCK_PLANTS) < 0.5) {
-        offset = windOffset(worldPos, 0.10 * WAVE_STRENGTH, 1.6 * WIND_SPEED, seed) * heightFrac;
+        float heightFrac = sat(-midOffset.y * 2.0 + 0.5);
+        offset = plantWindOffset(worldPos, blockCoord, heightFrac, 0.08 * WAVE_STRENGTH, 1.2 * WIND_SPEED);
     }
     #endif
 
     #ifdef WAVING_LEAVES
     if (abs(mc_Entity.x - BLOCK_LEAVES) < 0.5) {
-        offset = windOffset(floor(worldPos) + 0.5, 0.05 * WAVE_STRENGTH, 1.3 * WIND_SPEED, seed);
+        offset = leavesWindOffset(blockCoord, 0.035 * WAVE_STRENGTH, 0.85 * WIND_SPEED);
     }
     #endif
 
