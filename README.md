@@ -40,8 +40,8 @@ que es la forma actual de usar shaders en 1.21.11.
 ## 🚀 Instalación
 
 1. Instala **Iris + Sodium** en tu instalación de 1.21.11.
-2. Descarga el pack ya empaquetado: **[`releases/Andes-Shaders-v1.0.0.zip`](releases/Andes-Shaders-v1.0.0.zip)**
-   (o créalo tú mismo con `python3 tools/build_pack.py`).
+2. Descarga el pack ya empaquetado: **[`releases/Andes-Shaders-v1.0.1.zip`](releases/Andes-Shaders-v1.0.1.zip)**
+   (o créalo tú mismo con `python3 tools/build_pack.py 1.0.1`).
 3. Copia el `.zip` en la carpeta `shaderpacks` de tu Minecraft
    (*Opciones → Vídeo → Shader Packs → Abrir carpeta de shaders*).
 4. En el juego: *Opciones → Vídeo → Shader Packs* y elige **Andes Shaders**.
@@ -51,8 +51,14 @@ que es la forma actual de usar shaders en 1.21.11.
 
 ## ⚙️ Opciones
 
-Las opciones se definen en [`shaders/shaders.properties`](shaders/shaders.properties)
+Las opciones se definen en [`shaders/lib/settings.glsl`](shaders/lib/settings.glsl)
 y aparecen en el menú *Shader Pack Settings*.
+
+> **Importante:** Iris/OptiFine solo leen las opciones de los archivos de shader
+> (`.vsh`/`.fsh` y los que estos incluyen). Un `#define` escrito en
+> `shaders.properties` no llega nunca al GLSL: por eso las opciones viven en
+> `lib/settings.glsl` y `shaders.properties` solo controla los menús, los
+> sliders, los perfiles y los ajustes del pipeline.
 
 ### Perfiles
 
@@ -106,11 +112,11 @@ El menú está traducido al español y al inglés (`shaders/lang/es_es.lang` y
 
 ```
 shaders/                  <- el pack (esta carpeta va en la raíz del .zip)
-├── shaders.properties    <- opciones, perfiles, menús y ajustes del pipeline
+├── shaders.properties    <- menús, sliders, perfiles y ajustes del pipeline
 ├── block.properties      <- IDs de bloque para el viento y la lava
 ├── lang/                 <- traducciones de las opciones
 ├── lib/                  <- código compartido
-│   ├── settings.glsl     <- constantes del pipeline (resolución de sombras, etc.)
+│   ├── settings.glsl     <- opciones del pack (las lee Iris) y constantes del pipeline
 │   ├── common.glsl       <- utilidades (ruido, mapeo de tonos, color, viñeta)
 │   ├── fog.glsl          <- niebla
 │   ├── lighting.glsl     <- lightmap, sombras y sombreado de superficies
@@ -130,33 +136,42 @@ releases/                 <- packs empaquetados listos para shaderpacks/
 
 ## ✅ Validación (sin abrir Minecraft)
 
-`tools/validate_shaders.py` resuelve los `#include` como hace Iris, inyecta los
-`#define` de las opciones y **compila los 46 programas con glslang** en cuatro
-combinaciones de opciones (por defecto, todo al máximo, todo al mínimo y perfil
-patata). Además revisa:
+`tools/validate_shaders.py` resuelve los `#include` y **descubre y aplica las
+opciones igual que Iris** (solo en el código GLSL, reescribiendo la línea del
+`#define`/`const`, sin inyectar nada) y **compila los 46 programas con glslang**
+en cuatro combinaciones: por defecto, todo al máximo, todo al mínimo y el perfil
+PATATA. Además revisa:
 
 - que los `uniform` usados existan en la API de Iris/OptiFine;
 - que los atributos (`mc_Entity`, `at_midBlock`) se usen solo donde están permitidos;
 - que cada `.fsh` que escribe color declare `/* RENDERTARGETS: N */`;
 - que los `varying` del `.fsh` estén declarados en su `.vsh`;
-- que las opciones del menú, los sliders y los perfiles existan de verdad.
+- que las opciones del menú, los sliders y los perfiles existan de verdad en el GLSL;
+- que ningún `#define` se quede en `shaders.properties` (esas líneas no llegan al GLSL);
+- que todos los macros usados en `#if`/`#ifdef` estén definidos en el pack.
 
 ```bash
 # Necesita glslangValidator en el PATH (paquete glslang-tools)
 python3 tools/validate_shaders.py
 
 # Crear el .zip listo para shaderpacks/
-python3 tools/build_pack.py 1.0.0
+python3 tools/build_pack.py 1.0.1
 ```
 
 Resultado actual:
 
 ```
-[por defecto]     compilados OK: 46   con error: 0
-[todo al maximo]  compilados OK: 46   con error: 0
-[todo al minimo]  compilados OK: 46   con error: 0
-[perfil patata]   compilados OK: 46   con error: 0
+Programas encontrados: 46
+Opciones descubiertas en el GLSL: 34
+[por defecto]                 compilados OK: 46   con error: 0
+[todo al maximo (28 opciones)] compilados OK: 46   con error: 0
+[todo al minimo (28 opciones)] compilados OK: 46   con error: 0
+[perfil PATATA (13 opciones)]  compilados OK: 46   con error: 0
 ```
+
+Las 28 opciones «de usuario» son las 10 booleanas + 16 con valores + los dos
+`const` de sombras de `lib/settings.glsl` (las 6 restantes son los guardas
+`ANDES_*_GLSL` de los `#include`, que no aparecen en el menú).
 
 > La validación comprueba que el código GLSL es correcto y coherente con la API de
 > Iris, pero no sustituye a probarlo en el juego. Si ves algo raro, abre un *issue*
@@ -187,6 +202,29 @@ Resultado actual:
 | Va lento | Usa el perfil **PATATA** o **RÁPIDO**, o desactiva `BLOOM` y `SHADOWS`. |
 | El agua o la hierba no se mueven | Comprueba que `WATER_WAVES` / `WAVING_PLANTS` estén activados. |
 | Un bloque nuevo no se mece | Añádelo a `block.properties` (ID 100 o 101). |
+| En el log sale `error C1503: undefined variable "EXPOSURE"` (o `CONTRAST`, `SATURATION`, `VIGNETTE`) y el pack no se aplica | Tenías la versión 1.0.0: las opciones estaban declaradas en `shaders.properties` y no llegaban al GLSL. Usa el pack **v1.0.1**, donde las opciones viven en `shaders/lib/settings.glsl`. |
+| Ninguna opción del menú hace nada / el pack se ve "sin efectos" | Comprueba que las opciones estén declaradas en el GLSL (`lib/settings.glsl`), no en `shaders.properties`; `tools/validate_shaders.py` avisa de ese error. |
+
+---
+
+## 📝 Cambios
+
+### v1.0.1
+
+- **Arreglado el error `C1503: undefined variable "CONTRAST"` (y `SATURATION`,
+  `VIGNETTE`, `EXPOSURE`, `BLOOM_STRENGTH`, `TONEMAP`)** que impedía cargar el
+  pack en Iris.
+- Las opciones del pack se han movido de `shaders.properties` a
+  `shaders/lib/settings.glsl`: Iris/OptiFine solo leen las opciones de los
+  archivos de shader, por lo que en la v1.0.0 ninguna opción existía (y por eso
+  también estaban desactivados sombras, bloom, olas, viento, cielo propio y FXAA).
+- `tools/validate_shaders.py` ya no inyecta `#define`: ahora descubre y aplica las
+  opciones como lo hace Iris y compila el pack tal cual se carga en el juego, así
+  que este fallo no puede volver a colarse sin que el validador lo detecte.
+
+### v1.0.0
+
+- Primera versión.
 
 ---
 
