@@ -10,8 +10,6 @@
 #include "/lib/fog.glsl"
 
 uniform sampler2D texture;
-uniform int heldBlockLightValue;
-uniform int heldBlockLightValue2;
 
 varying vec2 texcoord;
 varying vec2 lmcoord;
@@ -29,10 +27,10 @@ void main() {
     float dist = length(vViewPos);
     float shadow = getShadow(vShadowPos, vNormal, shadowLightPosition, dist);
 
-    vec3 color = shadeSurface(albedo, lmcoord, shadow, dayF);
+    vec3 color = shadeSurface(albedo, lmcoord, shadow, dayF, dist);
 
     float handLight = max(float(heldBlockLightValue), float(heldBlockLightValue2)) / 15.0;
-    color += albedo * vec3(1.0, 0.85, 0.65) * handLight * 0.30;
+    color += albedo * vec3(1.15, 0.82, 0.45) * handLight * 0.35;
 
     color = applyFog(color, dist);
 

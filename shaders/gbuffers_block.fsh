@@ -31,7 +31,7 @@ void main() {
     float dist = length(vViewPos);
     float shadow = getShadow(vShadowPos, vNormal, shadowLightPosition, dist);
 
-    vec3 color = shadeSurface(albedo, lmcoord, shadow, dayF);
+    vec3 color = shadeSurface(albedo, lmcoord, shadow, dayF, dist);
     color = applyFog(color, dist);
 
     gl_FragData[0] = vec4(color, alpha);

@@ -2,8 +2,8 @@
 
 /* ==========================================================================
    Andes Shaders - Bloques del mundo (solid + cutout)
-   Se anade el movimiento del viento a la vegetacion definida en
-   block.properties (ID 100 = plantas, ID 101 = hojas).
+   Vegetacion mecida por el viento de forma suave y organica.
+   ID 100 = plantas (base anclada), ID 101 = hojas (bloque entero sincronizado).
    ========================================================================== */
 
 #include "/lib/waves.glsl"
@@ -27,32 +27,33 @@ varying vec3 vShadowPos;
 void main() {
     vec4 viewPos = gl_ModelViewMatrix * gl_Vertex;
     vec4 playerPos = gbufferModelViewInverse * viewPos;
-
     vec3 worldPos = playerPos.xyz + cameraPosition;
+
     vec3 offset = vec3(0.0);
 
 #if defined(WAVING_PLANTS) || defined(WAVING_LEAVES)
-    // at_midBlock guarda el desplazamiento al centro del bloque en 1/64 de bloque
+    // at_midBlock apunta al centro del bloque: esto garantiza que todos
+    // los vertices del bloque compartan la misma referencia espacial exacta.
     vec3 midOffset = at_midBlock.xyz * 0.015625;
-    float heightFrac = sat(-midOffset.y * 2.0 + 0.5); // 0 = base, 1 = parte alta
-    float seed = hash12(floor(worldPos.xz) + 0.5) * 6.2831;
+    vec3 blockCenter = worldPos + midOffset;
+    vec3 blockCoord = floor(blockCenter + 0.001) + 0.5;
 
     #ifdef WAVING_PLANTS
     if (abs(mc_Entity.x - BLOCK_PLANTS) < 0.5) {
-        offset = windOffset(worldPos, 0.10 * WAVE_STRENGTH, 1.6 * WIND_SPEED, seed) * heightFrac;
+        float heightFrac = sat(-midOffset.y * 2.0 + 0.5);
+        offset = plantWindOffset(worldPos, blockCoord, heightFrac, 0.08 * WAVE_STRENGTH, 1.2 * WIND_SPEED);
     }
     #endif
 
     #ifdef WAVING_LEAVES
     if (abs(mc_Entity.x - BLOCK_LEAVES) < 0.5) {
-        offset = windOffset(floor(worldPos) + 0.5, 0.05 * WAVE_STRENGTH, 1.3 * WIND_SPEED, seed);
+        offset = leavesWindOffset(blockCoord, 0.035 * WAVE_STRENGTH, 0.85 * WIND_SPEED);
     }
     #endif
 
     viewPos.xyz += mat3Of(gbufferModelView) * offset;
-#endif
-
     playerPos.xyz += offset;
+#endif
 
     gl_Position = gl_ProjectionMatrix * viewPos;
 
@@ -62,5 +63,12 @@ void main() {
     vNormal = gl_NormalMatrix * gl_Normal;
     vViewPos = viewPos.xyz;
     vWorldPos = worldPos + offset;
-    vShadowPos = toShadowCoords(playerPos.xyz).xyz;
+
+    // Normal en espacio de jugador para sesgo suave contra acné en sombras
+    vec3 normalPlayer = mat3Of(gbufferModelViewInverse) * vNormal;
+    float normLen = dot(normalPlayer, normalPlayer);
+    if (normLen > 0.0001) normalPlayer *= inversesqrt(normLen);
+    else normalPlayer = vec3(0.0, 1.0, 0.0);
+
+    vShadowPos = toShadowCoordsBiased(playerPos.xyz, normalPlayer).xyz;
 }

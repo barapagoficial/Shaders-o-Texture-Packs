@@ -24,4 +24,17 @@ vec4 toShadowCoords(vec3 playerPos) {
 #endif
 }
 
+/* Version con desplazamiento segun la normal para evitar acné en superficies */
+vec4 toShadowCoordsBiased(vec3 playerPos, vec3 normalPlayer) {
+#ifdef SHADOWS
+    vec3 biasedPos = playerPos + normalPlayer * 0.035;
+    vec4 clip = shadowProjection * (shadowModelView * vec4(biasedPos, 1.0));
+    float w = (abs(clip.w) < 0.00001) ? 1.0 : clip.w;
+    clip.xyz = clip.xyz / w;
+    return vec4(clip.xyz * 0.5 + 0.5, w);
+#else
+    return vec4(0.0);
+#endif
+}
+
 #endif

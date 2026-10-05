@@ -4,7 +4,8 @@
 
 /* ==========================================================================
    Andes Shaders - Bloques del mundo
-   Iluminacion del lightmap de Minecraft + sombras dinamicas + niebla.
+   Iluminacion de antorchas calida e independiente, sombras dinamicas,
+   luz de mano dinamica y niebla atmosferica.
    ========================================================================== */
 
 #include "/lib/lighting.glsl"
@@ -35,7 +36,7 @@ void main() {
     float dist = length(vViewPos);
     float shadow = getShadow(vShadowPos, vNormal, shadowLightPosition, dist);
 
-    vec3 color = shadeSurface(albedo, lmcoord, shadow, dayF);
+    vec3 color = shadeSurface(albedo, lmcoord, shadow, dayF, dist);
 
     // Brillo del suelo mojado por la lluvia
     if (wetness > 0.02) {
