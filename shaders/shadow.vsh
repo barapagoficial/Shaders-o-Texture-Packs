@@ -12,7 +12,9 @@
 attribute vec4 mc_Entity;
 attribute vec4 at_midBlock;
 
-uniform mat4 shadowModelView;
+/* shadowModelView y shadowProjection los declara /lib/shadows.glsl
+   (incluido arriba): declararlos otra vez aqui rompe la compilacion
+   con el error C1038 en NVIDIA. */
 uniform mat4 shadowModelViewInverse;
 uniform vec3 cameraPosition;
 
